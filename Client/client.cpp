@@ -1,7 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <sys/time.h>
-#include "socket.h"
+#include "../socket.h"
 
 using namespace std;
 using namespace stdsock;

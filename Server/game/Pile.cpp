@@ -1,23 +1,4 @@
-#include <vector>
-#include <errno.h>
-#include <stdio.h>
-#include <iostream>
-
-class Pile
-{
-private:
-    int id;
-    std::vector<int> card;
-    bool isAscendant;
-    
-public:
-    Pile();
-    Pile(int id, bool isAscendant);
-
-    bool addCard(int);
-    int getLastCard();
-    bool getIsAscendant();
-};
+#include "Pile.h"
 
 Pile::Pile(){
 }
@@ -34,7 +15,7 @@ Pile::Pile(int id_, bool is_ascendant)
 }
 
 
-bool Pile::addCard(int num){
+void Pile::addCard(int num){
     card.push_back(num);
 }
 
