@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <iostream>
 #include "pile.h"
+#include <string>
 
 class Deck
 {
@@ -16,5 +17,6 @@ public:
     ~Deck(){}
 
     void draw();
+    std::string showDeck();
     void addCard(int numCard, Pile pile);
 };

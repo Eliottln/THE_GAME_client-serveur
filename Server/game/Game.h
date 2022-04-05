@@ -28,5 +28,5 @@ public:
     ~Game();
 
     void addPlayer(StreamSocket* client);
-    int getNbJoueurs();
+    void startGame();
 };

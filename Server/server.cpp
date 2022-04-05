@@ -22,28 +22,39 @@ void reader(StreamSocket* client, ConnectionPoint* server){
             cout << "Client: \t"<< msg << endl;
             if (msg == "STRT")
             {
-                string player = "Nb players ?";
-                // envoie le message au client
-                client->send(player);
-                player.clear();
-                client->read(player);
-                if (player == "2")
-                {
+                try{
+                    string player = "Nb players ?";
+                    client->send(player);
+                    player.clear();
+                    client->read(player);
+                    int nbPlayer = stoi(player);
+                    cout<<"Le jeu sera composé de "<<nbPlayer<<" joueur(s)"<<endl;
+
                     string cards = "Nb cards ?";
                     client->send(cards);
                     cards.clear();
                     client->read(cards);
-                    if (cards == "4")
-                    {
-                        game.init(2,4,server,client);
-                        client->send("waiting player...");
-                    }
+                    int nbCards = stoi(cards);
+                    cout<<"Les joueurs auront "<<nbCards<<" cartes"<<endl;
+
+                    game.init(nbPlayer,nbCards,server,client);
                 }
+                catch(exception& e){
+                    cout<<e.what()<<endl;
+                    break;
+                }
+
             }
-            if (msg == "JOIN")
+            else if (msg == "JOIN")
             {
                 game.addPlayer(client);
             }
+
+            // else{
+            //     try{
+            //         int theCard
+            //     }
+            // }
             
         }else{
             // client n'existe plus, on sort
@@ -53,7 +64,7 @@ void reader(StreamSocket* client, ConnectionPoint* server){
     }
 }
 
-void writer(vector<StreamSocket*>* clientTab) {
+/*void writer(vector<StreamSocket*>* clientTab) {
     while (true) {
         string veryLongString;
         getline(cin,veryLongString); // on attend que le serveur ecrive
@@ -64,7 +75,7 @@ void writer(vector<StreamSocket*>* clientTab) {
             (*i)->send(veryLongString);
         }
     }
-}
+}*/
 
 
 int main()
@@ -73,7 +84,7 @@ int main()
     ConnectionPoint *server=new ConnectionPoint(3490);
 
     int err= server->init();
-    // std::cout << server->getIP() << ":" << server->getPort() << std::endl;
+    //std::cout << server->getIP() << ":" << server->getPort() << std::endl;
     if (err != 0) {
         std::cout << strerror(err) << std::endl;
         exit(err);

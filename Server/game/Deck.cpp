@@ -16,6 +16,15 @@ void Deck::draw(){
     pioche->erase(pioche->begin()+(card-1));
 }
 
+std::string Deck::showDeck(){
+    std::string allCards="";
+    for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
+    {
+        allCards += std::to_string(*i) + "\t";
+    }
+    return allCards;    
+}
+
 void Deck::addCard(int numCard, Pile pile){
 
     
