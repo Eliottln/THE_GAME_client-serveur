@@ -4,13 +4,15 @@
 #include <iterator>
 #include <ctime>
 #include <clocale>
-#include "socket.h"
+#include "../socket.h"
+#include "game/Game.h"
 
 using namespace std;
 using namespace stdsock;
 
+Game game;
 
-void reader(StreamSocket* client){
+void reader(StreamSocket* client, ConnectionPoint* server){
     while (true) {
         string msg;
         int nb=client->read(msg); // bloque la boucle en attendant un msg d'un client
@@ -18,15 +20,51 @@ void reader(StreamSocket* client){
         if(nb > 0){
             // message recu avec nb caracteres
             cout << "Client: \t"<< msg << endl;
+            if (msg == "STRT")
+            {
+                try{
+                    string player = "Nb players ?";
+                    client->send(player);
+                    player.clear();
+                    client->read(player);
+                    int nbPlayer = stoi(player);
+                    cout<<"Le jeu sera composé de "<<nbPlayer<<" joueur(s)"<<endl;
+
+                    string cards = "Nb cards ?";
+                    client->send(cards);
+                    cards.clear();
+                    client->read(cards);
+                    int nbCards = stoi(cards);
+                    cout<<"Les joueurs auront "<<nbCards<<" cartes"<<endl;
+
+                    game.init(nbPlayer,nbCards,server,client);
+                }
+                catch(exception& e){
+                    cout<<e.what()<<endl;
+                    break;
+                }
+
+            }
+            else if (msg == "JOIN")
+            {
+                game.addPlayer(client);
+            }
+
+            // else{
+            //     try{
+            //         int theCard
+            //     }
+            // }
+            
         }else{
             // client n'existe plus, on sort
-            printf("[-]Error in receiving data.\n");
+            printf("[-]Client disconnected.\n");
             break;
         }
     }
 }
 
-void writer(vector<StreamSocket*>* clientTab) {
+/*void writer(vector<StreamSocket*>* clientTab) {
     while (true) {
         string veryLongString;
         getline(cin,veryLongString); // on attend que le serveur ecrive
@@ -37,22 +75,24 @@ void writer(vector<StreamSocket*>* clientTab) {
             (*i)->send(veryLongString);
         }
     }
-}
+}*/
 
 
 int main()
 {
+    srand(time(NULL));
     ConnectionPoint *server=new ConnectionPoint(3490);
 
     int err= server->init();
-    // std::cout << server->getIP() << ":" << server->getPort() << std::endl;
+    //std::cout << server->getIP() << ":" << server->getPort() << std::endl;
     if (err != 0) {
         std::cout << strerror(err) << std::endl;
         exit(err);
     }
+    cout<<"Server start"<<endl;
 
     vector<StreamSocket*> clientTab; // vecteur de tous les clients
-    std::thread (writer, &clientTab).detach(); // pour écrire à tous les clients
+    // std::thread (writer, &clientTab).detach(); // pour écrire à tous les clients
 
     while (true) {
         StreamSocket* client = server->accept(); // attend un nouveau client
@@ -63,7 +103,7 @@ int main()
         }else{
             std::cout << "Got a client!" << std::endl;
             clientTab.push_back(client);
-            std::thread (reader, client).detach(); // pour lire un texte recu par un seul client
+            std::thread (reader, client, server).detach(); // pour lire un texte recu par un seul client
         }
 
     }

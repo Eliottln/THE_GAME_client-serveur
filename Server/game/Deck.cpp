@@ -1,25 +1,4 @@
-#include <vector>
-#include <errno.h>
-#include <stdio.h>
-#include <iostream>
-#include "pile.h"
-
-class Deck
-{
-private:
-    int idJoueur;
-    std::vector<int> deck;
-    std::vector<int>* pioche;
-
-public:
-    Deck(int idJoueur, int nbCard, std::vector<int>* newPioche);
-    ~Deck(){}
-
-    int draw();
-    void addCard(int numCard, Pile pile);
-};
-
-
+#include "Deck.h"
 
 Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche)
 {
@@ -31,19 +10,28 @@ Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche)
 
 }
 
-int Deck::draw(){
+void Deck::draw(){
     int card = rand() % pioche->size();
     deck.push_back(pioche->at(card));
     pioche->erase(pioche->begin()+(card-1));
 }
 
+std::string Deck::showDeck(){
+    std::string allCards="";
+    for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
+    {
+        allCards += std::to_string(*i) + "\t";
+    }
+    return allCards;    
+}
+
 void Deck::addCard(int numCard, Pile pile){
 
     
-    for (int i = 0; i < deck.size(); i++)
+    for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
     {
         //Verification que la carte existe dans le deck
-        if (numCard==deck.at(i))
+        if (numCard==*i)
         {
             //Verification si la carte est posable sur le tas
             //Puis mettre dans le tas ou non
@@ -61,7 +49,7 @@ void Deck::addCard(int numCard, Pile pile){
             }
             
             //supprime la carte du deck
-            deck.erase(deck.begin()+i);
+            deck.erase(i);
 
         }
 
