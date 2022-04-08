@@ -22,7 +22,7 @@ std::string Deck::showDeck(){
     {
         allCards += std::to_string(*i) + "\t";
     }
-    return allCards;    
+    return allCards+"\n";
 }
 
 void Deck::addCard(int numCard, Pile pile){

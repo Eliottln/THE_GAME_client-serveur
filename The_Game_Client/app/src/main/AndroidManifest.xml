@@ -13,6 +13,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.The_Game_Client">
         <activity
+            android:name=".GameRoom"
+            android:exported="false" />
+        <activity
             android:name=".CreateGame"
             android:exported="false" />
         <activity

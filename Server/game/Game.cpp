@@ -46,23 +46,27 @@ void Game::addPlayer(StreamSocket* client){
             startGame();
         }
         else{
-            client->send("Waiting player...");
+            client->send("Waiting player...\n");
         }
     }
     else{
-        client->send("Game full");
+        client->send("Game full\n");
     }
 }
 
-
-void Game::startGame(){
-    
+void Game::showPile(){
     for (map<StreamSocket*,Deck>::iterator itr = playersTab.begin(); itr != playersTab.end(); ++itr) {
         string pile = to_string(tas1.getLastCard()) + "\t"
                     + to_string(tas2.getLastCard()) + "\t"
                     + to_string(tas3.getLastCard()) + "\t"
-                    + to_string(tas4.getLastCard());
+                    + to_string(tas4.getLastCard()) + "\n";
         itr->first->send(pile);
+    }
+}
+
+void Game::startGame(){
+    
+    for (map<StreamSocket*,Deck>::iterator itr = playersTab.begin(); itr != playersTab.end(); ++itr) {
         itr->first->send(itr->second.showDeck());
     }
 }

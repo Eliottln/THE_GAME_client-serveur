@@ -23,16 +23,16 @@ void reader(StreamSocket* client, ConnectionPoint* server){
             if (msg == "STRT")
             {
                 try{
-                    string player = "Nb players ?";
-                    client->send(player);
-                    player.clear();
+                    string player;
+                    // client->send(player);
+                    // player.clear();
                     client->read(player);
                     int nbPlayer = stoi(player);
                     cout<<"Le jeu sera composé de "<<nbPlayer<<" joueur(s)"<<endl;
 
-                    string cards = "Nb cards ?";
-                    client->send(cards);
-                    cards.clear();
+                    string cards;
+                    // client->send(cards);
+                    // cards.clear();
                     client->read(cards);
                     int nbCards = stoi(cards);
                     cout<<"Les joueurs auront "<<nbCards<<" cartes"<<endl;
@@ -49,12 +49,6 @@ void reader(StreamSocket* client, ConnectionPoint* server){
             {
                 game.addPlayer(client);
             }
-
-            // else{
-            //     try{
-            //         int theCard
-            //     }
-            // }
             
         }else{
             // client n'existe plus, on sort
