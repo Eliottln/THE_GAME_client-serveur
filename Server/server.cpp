@@ -20,7 +20,7 @@ void reader(StreamSocket* client, ConnectionPoint* server){
         if(nb > 0){
             // message recu avec nb caracteres
             cout << "Client: \t"<< msg << endl;
-            if (msg == "STRT")
+            if (msg == "MAKE")
             {
                 try{
                     string player;
@@ -37,11 +37,10 @@ void reader(StreamSocket* client, ConnectionPoint* server){
                     int nbCards = stoi(cards);
                     cout<<"Les joueurs auront "<<nbCards<<" cartes"<<endl;
 
-                    game.init(nbPlayer,nbCards,server,client);
+                    game.init(nbPlayer,nbCards,client);
                 }
                 catch(exception& e){
                     cout<<e.what()<<endl;
-                    break;
                 }
 
             }
@@ -49,7 +48,38 @@ void reader(StreamSocket* client, ConnectionPoint* server){
             {
                 game.addPlayer(client);
             }
-            
+            else if (msg == "PILE")
+            {
+                try{
+                    string card;
+                    client->read(card);
+                    int idCard;
+                    int idPile;
+                    
+                    string word="";
+                    for (auto x : card) 
+                    {
+                        if (x == '-')
+                        {
+                            idCard = stoi(word);
+                            word = "";
+                        }
+                        else {
+                            word = word + x;
+                        }
+                    }
+                    idPile = stoi(word);
+
+                    cout<<"Carte "<<idCard<<endl;                    
+                    cout<<"Pile "<<idPile<<endl;
+                    game.playCard(client,idCard,idPile);
+                    game.sendState();
+                }
+                catch(exception& e){
+                    cout<<e.what()<<endl;
+                }
+            }
+
         }else{
             // client n'existe plus, on sort
             printf("[-]Client disconnected.\n");
@@ -57,6 +87,7 @@ void reader(StreamSocket* client, ConnectionPoint* server){
         }
     }
 }
+
 
 /*void writer(vector<StreamSocket*>* clientTab) {
     while (true) {

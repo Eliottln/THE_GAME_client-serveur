@@ -1,5 +1,5 @@
 #include <vector>
-#include <map>
+#include <unordered_map>
 #include <thread>
 #include "../../socket.h"
 #include "Deck.h"
@@ -11,23 +11,19 @@ class Game
 {
 private:
     int idGame;
-    ConnectionPoint* server;
-    // vector<StreamSocket*> clientTab;
-    map<StreamSocket*,Deck> playersTab;
-
+    unordered_map<StreamSocket*,Deck> playersTab;
     Pile tas1, tas2, tas3, tas4;
     vector<int> pioche;
-
-    // vector<Deck> tabJoueurs;
     int nbCartes, nbJoueurs;
 
 public:
     Game(){}
-    Game(int nb_joueurs, int nb_cartes, ConnectionPoint* server_, StreamSocket* client);
-    void init(int nb_joueurs, int nb_cartes, ConnectionPoint* server_, StreamSocket* client);
+    Game(int nb_joueurs, int nb_cartes, StreamSocket* client);
+    void init(int nb_joueurs, int nb_cartes, StreamSocket* client);
     ~Game();
 
     void addPlayer(StreamSocket* client);
-    void showPile();
-    void startGame();
+    string showPile();
+    void sendState();
+    void playCard(StreamSocket* client, int idCard, int idPile);
 };

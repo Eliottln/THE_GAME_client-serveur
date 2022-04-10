@@ -30,6 +30,7 @@ public class CreateGame extends AppCompatActivity {
                     TextView tvStrt = findViewById(R.id.tvStrt);
                     tvStrt.setText("Nombre de cartes :");
                     etPlayersCards.setHint("nb_cartes");
+                    etPlayersCards.setText("");
                     btnStrt.setText("Commencer");
                     change=true;
                 }

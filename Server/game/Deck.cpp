@@ -16,18 +16,17 @@ void Deck::draw(){
     pioche->erase(pioche->begin()+(card-1));
 }
 
-std::string Deck::showDeck(){
+std::string Deck::showDeck() const{
     std::string allCards="";
-    for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
+    for (std::vector<int>::const_iterator i = deck.begin(); i != deck.end(); i++)
     {
         allCards += std::to_string(*i) + "\t";
     }
     return allCards+"\n";
 }
 
-void Deck::addCard(int numCard, Pile pile){
+void Deck::addCard(int numCard, Pile* pile) {
 
-    
     for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
     {
         //Verification que la carte existe dans le deck
@@ -35,27 +34,23 @@ void Deck::addCard(int numCard, Pile pile){
         {
             //Verification si la carte est posable sur le tas
             //Puis mettre dans le tas ou non
-            if (pile.getIsAscendant()==true && (numCard>pile.getLastCard() || numCard==(pile.getLastCard()-10)))
+            if (pile->getIsAscendant()==true && (numCard>pile->getLastCard() || numCard==(pile->getLastCard()-10)))
             {
-                pile.addCard(numCard);
+                pile->addCard(numCard);
             }
-            else if (pile.getIsAscendant()==false && (numCard<pile.getLastCard() || numCard==(pile.getLastCard()+10)))
+            else if (pile->getIsAscendant()==false && (numCard<pile->getLastCard() || numCard==(pile->getLastCard()+10)))
             {
-                pile.addCard(numCard);
+                pile->addCard(numCard);
             }
             else
             {
                 perror("can't add card to this pile");
             }
-            
             //supprime la carte du deck
             deck.erase(i);
-
         }
-
     }
     
     //Piocher une nouvelle carte
     draw();
-    
 }

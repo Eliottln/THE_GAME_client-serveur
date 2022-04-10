@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
         btnJoin = findViewById(R.id.btnJoin);
 
         btnStart.setOnClickListener(v -> {
-            new Thread(new Thread3("STRT")).start();
+            new Thread(new Thread3("MAKE")).start();
             Intent intent = new Intent(MainActivity.this,CreateGame.class);
             startActivity(intent);
             finish();

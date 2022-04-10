@@ -17,6 +17,6 @@ public:
     ~Deck(){}
 
     void draw();
-    std::string showDeck();
-    void addCard(int numCard, Pile pile);
+    std::string showDeck() const;
+    void addCard(int numCard, Pile* pile) ;
 };
