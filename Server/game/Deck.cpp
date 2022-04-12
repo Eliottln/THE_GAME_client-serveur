@@ -3,7 +3,8 @@
 Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche, bool turn)
 {
     pioche = newPioche;
-    isYourTurn=turn;
+    isYourTurn = turn;
+    cardPlayed = 0;
     for (int i = 0; i < nbCard; i++)
     {
         draw();
@@ -12,9 +13,11 @@ Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche, bool turn)
 }
 
 void Deck::draw(){
-    int card = rand() % pioche->size();
-    deck.push_back(pioche->at(card));
-    pioche->erase(pioche->begin()+(card-1));
+    if (!pioche->empty()){
+        int card = rand() % pioche->size();
+        deck.push_back(pioche->at(card));
+        pioche->erase(pioche->begin()+(card-1));
+    }
 }
 
 std::string Deck::showDeck() const{
@@ -28,32 +31,37 @@ std::string Deck::showDeck() const{
 
 void Deck::addCard(int numCard, Pile* pile) {
 
+int j=1;
     for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
     {
+        std::cout<<"j="<<j<<" size="<<deck.size()<<std::endl;
         //Verification que la carte existe dans le deck
         if (numCard==*i)
         {
             //Verification si la carte est posable sur le tas
             //Puis mettre dans le tas ou non
-            if (pile->getIsAscendant()==true && (numCard>pile->getLastCard() || numCard==(pile->getLastCard()-10)))
+            if ((pile->getIsAscendant()==true && (numCard>pile->getLastCard() || numCard==(pile->getLastCard()-10))) ||
+                (pile->getIsAscendant()==false && (numCard<pile->getLastCard() || numCard==(pile->getLastCard()+10))) )
             {
                 pile->addCard(numCard);
-            }
-            else if (pile->getIsAscendant()==false && (numCard<pile->getLastCard() || numCard==(pile->getLastCard()+10)))
-            {
-                pile->addCard(numCard);
+                //supprime la carte du deck
+                if(i==deck.end()){
+                    deck.erase(deck.begin());
+                }
+                else{
+                    deck.erase(i);
+                }
+                cardPlayed++;
+                break;
             }
             else
             {
                 perror("can't add card to this pile");
             }
-            //supprime la carte du deck
-            deck.erase(i);
+            
         }
+        
     }
-    
-    //Piocher une nouvelle carte
-    draw();
 }
 
 void Deck::setIsYourTurn(bool turn){
@@ -62,4 +70,12 @@ void Deck::setIsYourTurn(bool turn){
 
 bool Deck::getIsYourTurn(){
     return isYourTurn;
+}
+
+void Deck::fillDeck(){
+    for (int i = 0; i < cardPlayed; i++)
+    {
+        draw();
+    }
+    cardPlayed = 0;
 }

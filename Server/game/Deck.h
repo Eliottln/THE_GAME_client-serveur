@@ -12,6 +12,7 @@ private:
     std::vector<int> deck;
     std::vector<int>* pioche;
     bool isYourTurn;
+    int cardPlayed;
 
 public:
     Deck(int idJoueur, int nbCard, std::vector<int>* newPioche, bool turn);
@@ -22,4 +23,5 @@ public:
     void addCard(int numCard, Pile* pile) ;
     void setIsYourTurn(bool turn);
     bool getIsYourTurn();
+    void fillDeck();
 };

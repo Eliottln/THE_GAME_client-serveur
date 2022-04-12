@@ -44,13 +44,13 @@ void Game::addPlayer(StreamSocket* client){
         cout<<playersTab.size()<<"\t"<<nbJoueurs<<endl;
         if (playersTab.size()==nbJoueurs)
         {
-            sendState();
+            sendState("Début du jeu\n");
             // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
             // auto pv = std::prev(itr, 1);
             // pv->second.setIsYourTurn(true);
         }
         else{
-            client->send("Waiting player...\n");
+            client->send("Attente de joueurs...\n");
             // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
             // auto pv = std::prev(itr, 1);
             // pv->second.setIsYourTurn(false);
@@ -72,11 +72,13 @@ string Game::showPile(){
     return pile;    
 }
 
-void Game::sendState(){
+void Game::sendState(string msg){
     string pile = showPile();
     for (unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.begin(); itr != playersTab.end(); ++itr) {
         itr->first->send(pile);
         itr->first->send(itr->second.showDeck());
+        
+        itr->first->send(msg);
     }
 }
 
@@ -154,4 +156,19 @@ void Game::nextTurn(StreamSocket* client){
     }
     
     itr->first->send("Votre tour\n");
+}
+
+void Game::draw(StreamSocket* client){
+
+    unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.begin();
+
+    while (itr != playersTab.end()) {
+        
+        if (itr->first == client)
+        {
+            itr->second.fillDeck();
+        }
+        
+        ++itr;
+    }
 }

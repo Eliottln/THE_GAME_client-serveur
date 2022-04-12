@@ -24,8 +24,9 @@ public:
 
     void addPlayer(StreamSocket* client);
     string showPile();
-    void sendState();
+    void sendState(string msg);
     void playCard(StreamSocket* client, int idCard, int idPile);
     void nextTurn(StreamSocket* client);
     bool testTurn(StreamSocket* client);
+    void draw(StreamSocket* client);
 };

@@ -75,16 +75,18 @@ void reader(StreamSocket* client, ConnectionPoint* server){
                         cout<<"Carte "<<idCard<<endl;                    
                         cout<<"Pile "<<idPile<<endl;
                         game.playCard(client,idCard,idPile);
-                        game.sendState();
+                        game.sendState("\n");
                     }
                 }
                 catch(exception& e){
                     cout<<e.what()<<endl;
                 }
             }
-            else if (msg == "SKIP")
+            else if (msg == "SKIP" && game.testTurn(client))
             {
                 game.nextTurn(client);
+                game.draw(client);
+                game.sendState("\n");
             }
 
         }else{
