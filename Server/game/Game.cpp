@@ -37,14 +37,23 @@ Game::~Game()
 void Game::addPlayer(StreamSocket* client){
     if (playersTab.size()<nbJoueurs)
     {
-        playersTab.insert(pair<StreamSocket*, Deck>(client, Deck(playersTab.size()+1,nbCartes,&pioche)));
+        if (playersTab.empty())
+            playersTab.insert(pair<StreamSocket*, Deck>(client, Deck(playersTab.size()+1,nbCartes,&pioche,true)));
+        else
+            playersTab.insert(pair<StreamSocket*, Deck>(client, Deck(playersTab.size()+1,nbCartes,&pioche,false)));
         cout<<playersTab.size()<<"\t"<<nbJoueurs<<endl;
         if (playersTab.size()==nbJoueurs)
         {
             sendState();
+            // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
+            // auto pv = std::prev(itr, 1);
+            // pv->second.setIsYourTurn(true);
         }
         else{
             client->send("Waiting player...\n");
+            // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
+            // auto pv = std::prev(itr, 1);
+            // pv->second.setIsYourTurn(false);
         }
         // string message = playersTab.cend()->second.showDeck();
         // client->send(message);
@@ -74,11 +83,11 @@ void Game::sendState(){
 void Game::playCard(StreamSocket* client, int idCard, int idPile){
     std::unordered_map<StreamSocket*,Deck>::iterator got = playersTab.find(client);
 
-  if ( got == playersTab.end() )
-    std::cout << "not found";
-  else{
-      switch (idPile)
-      {
+    if ( got == playersTab.end() )
+        std::cout << "Player not found";
+    else{
+        switch (idPile)
+        {
         case 1:
             got->second.addCard(idCard,&tas1);
             break;
@@ -91,9 +100,58 @@ void Game::playCard(StreamSocket* client, int idCard, int idPile){
         case 4:
             got->second.addCard(idCard,&tas4);
             break;
-        
         default:
             break;
-      }
-  }
+        }
+    }
+}
+
+bool Game::testTurn(StreamSocket* client){
+
+    unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.begin();
+
+    while (itr != playersTab.end()) {
+        
+        if (itr->first == client && itr->second.getIsYourTurn() == true)
+        {
+            return true;
+        }
+        
+        ++itr;
+    }
+    client->send("Pas votre tour\n");
+    return false;
+}
+
+void Game::nextTurn(StreamSocket* client){
+
+    unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.begin();
+
+    while (itr != playersTab.end()) {
+        
+        if (itr->second.getIsYourTurn() == true)
+        {
+            itr->second.setIsYourTurn(false);
+            itr->first->send("Fin de tour\n");
+            ++itr;
+
+            if (itr == playersTab.end())
+            {
+                itr = playersTab.begin();
+                itr->second.setIsYourTurn(true);
+            }
+            itr->second.setIsYourTurn(true);
+            break;
+        }
+        
+        ++itr;
+    }
+    if (itr == playersTab.end())
+    {
+        itr = playersTab.begin();
+        itr->second.setIsYourTurn(true);
+
+    }
+    
+    itr->first->send("Votre tour\n");
 }

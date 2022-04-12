@@ -19,7 +19,6 @@ public class MainActivity extends AppCompatActivity {
     private Thread Thread1 = null;
     private EditText etIP, etPort;
     private TextView tvMessages;
-    private EditText etMessage;
     private Button btnStart, btnJoin;
     private String SERVER_IP;
     private int SERVER_PORT;
@@ -34,7 +33,6 @@ public class MainActivity extends AppCompatActivity {
         etIP = findViewById(R.id.etIP);
         etPort = findViewById(R.id.etPort);
         tvMessages = findViewById(R.id.tvMessages);
-        etMessage = findViewById(R.id.etMessage);
         btnStart = findViewById(R.id.btnStart);
         btnJoin = findViewById(R.id.btnJoin);
 
@@ -47,6 +45,9 @@ public class MainActivity extends AppCompatActivity {
 
         btnJoin.setOnClickListener(v -> {
             new Thread(new Thread3("JOIN")).start();
+            Intent intent = new Intent(MainActivity.this,GameRoom.class);
+            startActivity(intent);
+            finish();
         });
 
         Button btnConnect = findViewById(R.id.btnConnect);
@@ -58,13 +59,6 @@ public class MainActivity extends AppCompatActivity {
             Thread1.start();
         });
 
-        Button btnSend = findViewById(R.id.btnSend);
-        btnSend.setOnClickListener(v -> {
-            String message = etMessage.getText().toString().trim();
-            if (!message.isEmpty()) {
-                new Thread(new Thread3(message)).start();
-            }
-        });
     }
 
     class Thread1 implements Runnable {

@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class GameRoom extends AppCompatActivity {
 
-    private TextView tvPile, tvDeck;
+    private TextView tvPile, tvDeck, tvInfo;
     private RadioGroup radioPile;
     private RadioButton radioButton;
     private EditText card;
@@ -26,6 +26,7 @@ public class GameRoom extends AppCompatActivity {
 
         tvPile = findViewById(R.id.tvPile);
         tvDeck = findViewById(R.id.tvDeck);
+        tvInfo = findViewById(R.id.tvInfo);
         radioPile = findViewById(R.id.rgPile);
         card = findViewById(R.id.etCard);
 
@@ -34,9 +35,14 @@ public class GameRoom extends AppCompatActivity {
             if (!card.getText().toString().equals("")) {
                 int selectedId = radioPile.getCheckedRadioButtonId();
                 radioButton = (RadioButton) findViewById(selectedId);
-                new Thread(new Thread3(card.getText().toString(), radioButton.getContentDescription().toString())).start();
+                new Thread(new Thread3("PILE",card.getText().toString(), radioButton.getContentDescription().toString())).start();
                 card.setText("");
             }
+        });
+
+        Button btnEnd = findViewById(R.id.btnEnd);
+        btnEnd.setOnClickListener(v -> {
+            new Thread(new Thread3("SKIP","", "")).start();
         });
 
         new Thread(new Thread2()).start();
@@ -60,7 +66,7 @@ public class GameRoom extends AppCompatActivity {
                                     isPileString = false;
                                 }
                                 catch(Exception e){
-                                    tvDeck.setText(message);
+                                    tvInfo.setText(message);
                                 }
                             }
                             else if (!isPileString){
@@ -77,17 +83,20 @@ public class GameRoom extends AppCompatActivity {
     }
 
     static class Thread3 implements Runnable {
-        private final String message, message2;
-        Thread3(String message, String message2) {
+        private final String message, message1, message2;
+        Thread3(String message, String message1, String message2) {
             this.message = message;
+            this.message1 = message1;
             this.message2 = message2;
         }
         @Override
         public void run() {
-            MainActivity.output.write("PILE");
+            MainActivity.output.write(message);
             MainActivity.output.flush();
-            MainActivity.output.write(message+'-'+message2);
-            MainActivity.output.flush();
+            if (!message1.equals("")) {
+                MainActivity.output.write(message1 + '-' + message2);
+                MainActivity.output.flush();
+            }
         }
     }
 }

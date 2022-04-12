@@ -12,7 +12,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
         android:textSize="24sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/etCard"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
@@ -40,24 +40,25 @@
         android:hint="Votre carte"
         android:inputType="numberSigned"
         android:minHeight="48dp"
-        app:layout_constraintBottom_toTopOf="@+id/tvDeck"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/btnSendCard"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/btnSendCard"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:text="Envoyer"
         app:layout_constraintBottom_toBottomOf="@+id/etCard"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/etCard" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <Button
         android:id="@+id/btnEnd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
         android:text="Terminer le tour"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -112,4 +113,14 @@
             android:textColor="#FF5722"
             android:textSize="34sp" />
     </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"
+        app:layout_constraintBottom_toTopOf="@+id/tvPile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/btnEnd" />
 </androidx.constraintlayout.widget.ConstraintLayout>

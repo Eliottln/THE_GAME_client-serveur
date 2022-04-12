@@ -1,8 +1,9 @@
 #include "Deck.h"
 
-Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche)
+Deck::Deck(int idJoueur, int nbCard, std::vector<int>* newPioche, bool turn)
 {
     pioche = newPioche;
+    isYourTurn=turn;
     for (int i = 0; i < nbCard; i++)
     {
         draw();
@@ -53,4 +54,12 @@ void Deck::addCard(int numCard, Pile* pile) {
     
     //Piocher une nouvelle carte
     draw();
+}
+
+void Deck::setIsYourTurn(bool turn){
+    isYourTurn = turn;
+}
+
+bool Deck::getIsYourTurn(){
+    return isYourTurn;
 }

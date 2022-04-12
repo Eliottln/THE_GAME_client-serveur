@@ -51,33 +51,40 @@ void reader(StreamSocket* client, ConnectionPoint* server){
             else if (msg == "PILE")
             {
                 try{
-                    string card;
-                    client->read(card);
-                    int idCard;
-                    int idPile;
-                    
-                    string word="";
-                    for (auto x : card) 
-                    {
-                        if (x == '-')
-                        {
-                            idCard = stoi(word);
-                            word = "";
-                        }
-                        else {
-                            word = word + x;
-                        }
-                    }
-                    idPile = stoi(word);
+                    if(game.testTurn(client)){
 
-                    cout<<"Carte "<<idCard<<endl;                    
-                    cout<<"Pile "<<idPile<<endl;
-                    game.playCard(client,idCard,idPile);
-                    game.sendState();
+                        string card;
+                        client->read(card);
+                        int idCard;
+                        int idPile;
+                        
+                        string word="";
+                        for (auto x : card) 
+                        {
+                            if (x == '-')
+                            {
+                                idCard = stoi(word);
+                                word = "";
+                            }
+                            else {
+                                word = word + x;
+                            }
+                        }
+                        idPile = stoi(word);
+
+                        cout<<"Carte "<<idCard<<endl;                    
+                        cout<<"Pile "<<idPile<<endl;
+                        game.playCard(client,idCard,idPile);
+                        game.sendState();
+                    }
                 }
                 catch(exception& e){
                     cout<<e.what()<<endl;
                 }
+            }
+            else if (msg == "SKIP")
+            {
+                game.nextTurn(client);
             }
 
         }else{

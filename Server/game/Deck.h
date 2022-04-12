@@ -11,12 +11,15 @@ private:
     int idJoueur;
     std::vector<int> deck;
     std::vector<int>* pioche;
+    bool isYourTurn;
 
 public:
-    Deck(int idJoueur, int nbCard, std::vector<int>* newPioche);
+    Deck(int idJoueur, int nbCard, std::vector<int>* newPioche, bool turn);
     ~Deck(){}
 
     void draw();
     std::string showDeck() const;
     void addCard(int numCard, Pile* pile) ;
+    void setIsYourTurn(bool turn);
+    bool getIsYourTurn();
 };
