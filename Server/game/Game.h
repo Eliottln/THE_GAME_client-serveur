@@ -12,7 +12,7 @@ class Game
 private:
     int idGame;
     unordered_map<StreamSocket*,Deck> playersTab;
-    Pile tas1, tas2, tas3, tas4;
+    Pile tas1, tas2, tas3, tas4; //tas du jeu
     vector<int> pioche;
     int nbCartes, nbJoueurs;
 

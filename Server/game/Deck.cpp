@@ -31,10 +31,8 @@ std::string Deck::showDeck() const{
 
 void Deck::addCard(int numCard, Pile* pile) {
 
-int j=1;
     for (std::vector<int>::iterator i = deck.begin(); i != deck.end(); i++)
     {
-        std::cout<<"j="<<j<<" size="<<deck.size()<<std::endl;
         //Verification que la carte existe dans le deck
         if (numCard==*i)
         {

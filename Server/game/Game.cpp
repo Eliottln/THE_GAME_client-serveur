@@ -45,24 +45,18 @@ void Game::addPlayer(StreamSocket* client){
         if (playersTab.size()==nbJoueurs)
         {
             sendState("Début du jeu\n");
-            // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
-            // auto pv = std::prev(itr, 1);
-            // pv->second.setIsYourTurn(true);
         }
         else{
             client->send("Attente de joueurs...\n");
-            // unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.end();
-            // auto pv = std::prev(itr, 1);
-            // pv->second.setIsYourTurn(false);
         }
-        // string message = playersTab.cend()->second.showDeck();
-        // client->send(message);
+
     }
     else{
         client->send("Game full\n");
     }
 }
 
+// affiche les tas
 string Game::showPile(){
     string pile = to_string(tas1.getLastCard()) + "\t"
                 + to_string(tas2.getLastCard()) + "\t"
@@ -72,6 +66,7 @@ string Game::showPile(){
     return pile;    
 }
 
+// envoie les tas et decks aux joueurs
 void Game::sendState(string msg){
     string pile = showPile();
     for (unordered_map<StreamSocket*,Deck>::iterator itr = playersTab.begin(); itr != playersTab.end(); ++itr) {

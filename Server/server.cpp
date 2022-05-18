@@ -20,6 +20,7 @@ void reader(StreamSocket* client, ConnectionPoint* server){
         if(nb > 0){
             // message recu avec nb caracteres
             cout << "Client: \t"<< msg << endl;
+            // creation partie
             if (msg == "MAKE")
             {
                 try{
